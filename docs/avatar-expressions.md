@@ -1,8 +1,8 @@
 # Avatar micro-expressions
 
-ORBIT is now a layered SVG creature adapted from the creator's supplied character reference, not a planet or floating orb. Its glossy eyes, turquoise markings and wing-fins, chest heart and rocket boots form a consistent identity. Head, brows, eyes, mouth, arms, body, wings and jets can move independently without another animation dependency.
+ORBIT uses its earlier expressive planet/orb identity, with a dotted orbital ring and little moon. The creature redesign has been removed at the creator's request, but its enhanced facial range, distinct mood colours and bounded contextual reactions are retained. Brows, eyes, mouth, the orb and its surroundings can move independently without another animation dependency.
 
-The top-of-chat character and shell face follow the current conversation; the welcome character has a neutral resting expression. This is an animatable vector adaptation of the reference, not the original raster image pasted into a circle.
+The top-of-chat avatar and shell face follow the current conversation; the welcome avatar has a neutral resting expression. The restored orb remains an animatable vector, not a static image.
 
 ## Decorative cues, not diagnosis
 
@@ -23,7 +23,7 @@ No extra model calls or stored mood labels are created. Temporary cue weights ex
 | Curiosity | Curious / electric violet |
 | Explicit possible danger | Concerned / muted amber, never an alarm |
 | Welcomed planning or serious discussion | Focused / deep blue |
-| No clear cue or resting | Neutral / silver-white |
+| No clear cue or resting | Neutral / original soft blue |
 
 Inference runs on submitted user turns, not unsent drafts or individual streaming tokens. Short replies can follow the preceding user turn; a new subject resets the expression. Reloading derives it from the currently loaded conversation rather than a stored profile. Route/account changes reset the shared expression. This presentation layer does not affect AI responses, consent, emergency handling or other safety logic.
 
@@ -38,11 +38,11 @@ Interaction state and tone are separate reusable selectors, not timer-driven emo
 - **Facial range:** happy, excited, amused, empathetic/downcast, concerned, frustrated, curious, surprised and sleepy, plus relaxed, attentive, thoughtful and replying expressions. Serious cues never enable a playful effect.
 - Completing, stopping or interrupting a reply exits thinking/speaking immediately.
 
-The welcome character is 240px (196px on narrow screens). The chat header uses a 176px desktop / 136px mobile character, retaining message space and compact mobile controls. Small navigation/history avatars use a static head crop.
+The welcome avatar is 240px (196px on narrow screens). The chat header uses a 176px desktop / 136px mobile avatar, retaining message space and compact mobile controls. Small navigation/history avatars use the same orb identity without ongoing motion.
 
 ## Bounded contextual reactions
 
-Only actual submitted turns create reaction events. A welcomed major milestone can trigger one short bounce, wing/arm movement, jet flare and confetti; a smaller win gets sparkles. Playful context permits a restrained giggle movement, curiosity a head tilt, surprise a brief startle, and distress a composed comforting movement. Reactions expire within 2.4 seconds. The same retry key does not replay, existing history/reloads do not trigger a celebration, and changes to a quiet tone suppress positive effects immediately. No reaction record is saved to the database.
+Only actual submitted turns create reaction events. A welcomed major milestone can trigger one short orb bounce and confetti; a smaller win gets sparkles. Playful context permits a restrained giggle movement, curiosity a tilt, surprise a brief startle, and distress a composed comforting movement. Reactions expire within 2.4 seconds. The same retry key does not replay, existing history/reloads do not trigger a celebration, and changes to a quiet tone suppress positive effects immediately. No reaction record is saved to the database.
 
 The cue selector distinguishes happiness from excitement, concern from frustration, and surprise from curiosity. Context such as fear, bad news or an explicit serious-support request suppresses celebration even when the message also mentions a wedding or another normally positive event. Embarrassment alone is not treated as an invitation to laugh.
 
