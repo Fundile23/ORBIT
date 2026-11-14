@@ -18,7 +18,7 @@ import {
 import { OrbitAvatar } from '@/components/orbit-avatar';
 import { useAvatarExpression } from '@/components/avatar-expression-context';
 import { inferAvatarTone } from '@/lib/avatar-tone';
-import { AVATAR_ACTIVITY_LABELS, getAvatarActivity } from '@/lib/avatar-presence';
+import { AVATAR_ACTIVITY_LABELS, getAvatarActivity, getAvatarReaction, type AvatarReactionEvent } from '@/lib/avatar-presence';
 import { ConsentDialog } from '@/components/consent-dialog';
 import { ConfirmDialog } from '@/components/confirm-dialog';
 import { RequireAuth } from '@/components/require-auth';
@@ -88,6 +88,7 @@ function ChatInner({ id }: { id: string }) {
   const [text, setText] = useState('');
   const [draftRestored, setDraftRestored] = useState(false);
   const [pending, setPending] = useState<Pending | null>(null);
+  const [avatarReaction, setAvatarReaction] = useState<AvatarReactionEvent | null>(null);
   const [composerFocused, setComposerFocused] = useState(false);
   const { setExpression } = useAvatarExpression();
   const avatarTone = useMemo(
@@ -100,8 +101,8 @@ function ChatInner({ id }: { id: string }) {
     hasReply: Boolean(pending?.reply),
   });
   useEffect(() => {
-    setExpression({ tone: avatarTone, activity: avatarActivity });
-  }, [avatarTone, avatarActivity, setExpression]);
+    setExpression({ tone: avatarTone, activity: avatarActivity, reaction: avatarReaction });
+  }, [avatarTone, avatarActivity, avatarReaction, setExpression]);
   const [consentFor, setConsentFor] = useState<{ content: string; cmid?: string } | null>(null);
   const [renameOpen, setRenameOpen] = useState(false);
   const [renameVal, setRenameVal] = useState('');
@@ -142,6 +143,8 @@ function ChatInner({ id }: { id: string }) {
         return;
       }
       const clientMessageId = cmid ?? uuid();
+      const history = qc.getQueryData<{ messages: Message[] }>(getGetConversationQueryKey(id))?.messages ?? [];
+      setAvatarReaction({ key: clientMessageId, kind: getAvatarReaction(inferAvatarTone(history, content)) });
       const ctrl = new AbortController();
       abortRef.current?.abort();
       abortRef.current = ctrl;
@@ -238,8 +241,8 @@ function ChatInner({ id }: { id: string }) {
           className="shrink-0"
           data-testid="avatar-conversation"
         >
-          <OrbitAvatar size={104} tone={avatarTone} activity={avatarActivity} decorative={false} className="sm:hidden" />
-          <OrbitAvatar size={136} tone={avatarTone} activity={avatarActivity} decorative={false} className="hidden sm:inline-flex" />
+          <OrbitAvatar size={136} tone={avatarTone} activity={avatarActivity} reaction={avatarReaction} decorative={false} className="sm:hidden" />
+          <OrbitAvatar size={176} tone={avatarTone} activity={avatarActivity} reaction={avatarReaction} decorative={false} className="hidden sm:inline-flex" />
         </span>
         <div className="min-w-0 flex-1">
           <h1 className="truncate text-lg font-normal" data-testid="text-conversation-title">{c.title}</h1>
@@ -298,7 +301,7 @@ function ChatInner({ id }: { id: string }) {
       <div role="log" aria-live="polite" aria-label="Messages" className="flex-1 space-y-5 py-6">
         {messages.length === 0 && !pending && (
           <div className="flex flex-col items-center py-16 text-center">
-            <OrbitAvatar size={104} tone={avatarTone} activity={avatarActivity} />
+            <OrbitAvatar size={136} tone={avatarTone} activity={avatarActivity} reaction={null} />
             <p className="mt-4 text-muted-foreground">Whenever you’re ready. There’s no wrong place to start.</p>
           </div>
         )}

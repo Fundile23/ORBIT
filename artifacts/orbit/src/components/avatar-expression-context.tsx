@@ -2,10 +2,10 @@ import { createContext, useCallback, useContext, useMemo, useState, type ReactNo
 import { useLocation } from 'wouter';
 import { usePersonal } from '@/lib/session';
 import type { AvatarTone } from '@/lib/avatar-tone';
-import type { AvatarActivity } from '@/lib/avatar-presence';
+import type { AvatarActivity, AvatarReactionEvent } from '@/lib/avatar-presence';
 
-type Expression = { tone: AvatarTone; activity: AvatarActivity };
-const neutral: Expression = { tone: 'neutral', activity: 'idle' };
+type Expression = { tone: AvatarTone; activity: AvatarActivity; reaction?: AvatarReactionEvent | null };
+const neutral: Expression = { tone: 'neutral', activity: 'idle', reaction: null };
 const ExpressionContext = createContext<Expression & { setExpression: (expression: Expression) => void }>({
   ...neutral, setExpression: () => undefined,
 });
@@ -18,12 +18,13 @@ export function AvatarExpressionProvider({ children }: { children: ReactNode }) 
   const [state, setState] = useState<Expression & { scope: string }>({ ...neutral, scope });
   const setExpression = useCallback((expression: Expression) => {
     setState((old) => old.scope === scope && old.tone === expression.tone && old.activity === expression.activity
+      && old.reaction?.kind === expression.reaction?.kind && old.reaction?.key === expression.reaction?.key
       ? old : { ...expression, scope });
   }, [scope]);
   const effective = state.scope === scope ? state : neutral;
   const value = useMemo(() => ({
-    tone: effective.tone, activity: effective.activity, setExpression,
-  }), [effective.tone, effective.activity, setExpression]);
+    tone: effective.tone, activity: effective.activity, reaction: effective.reaction, setExpression,
+  }), [effective.tone, effective.activity, effective.reaction, setExpression]);
   return <ExpressionContext.Provider value={value}>{children}</ExpressionContext.Provider>;
 }
 

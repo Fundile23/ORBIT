@@ -108,7 +108,7 @@ export default function HomePage() {
       <section className="flex flex-col items-center text-center">
         <div className="rise relative mb-8">
           <div className="absolute inset-0 -z-10 scale-[2.2] rounded-full bg-[radial-gradient(circle,hsl(210_92%_74%/.22),transparent_65%)]" aria-hidden />
-          <OrbitAvatar size={176} className="anim-float oa-hero" decorative={false} />
+          <OrbitAvatar size={240} className="oa-hero" decorative={false} />
         </div>
         <p className="rise font-mono text-[11px] uppercase tracking-[0.3em] text-primary/80" style={{ animationDelay: '80ms' }}>
           your private space

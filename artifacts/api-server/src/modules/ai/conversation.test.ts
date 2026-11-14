@@ -6,7 +6,7 @@ import { immediateSupport } from "../safety/immediate-support";
 
 test("versioned personality, adaptive rules and safety are part of each real reply", () => {
   const turns = buildOrbitConversation([{ role: "user", content: "Bored. Surprise me." }], { memoryEnabled: false });
-  assert.equal(ORBIT_PERSONALITY_VERSION, "2.1.0");
+  assert.equal(ORBIT_PERSONALITY_VERSION, "2.2.0");
   assert.match(turns[0]!.content, /CORE IDENTITY/);
   assert.match(turns[0]!.content, /ADAPT TO THIS TURN/);
   assert.match(turns[0]!.content, /Never mock genuine distress/);
@@ -22,6 +22,7 @@ test("emotional presence allows natural emojis without weakening consent or safe
   assert.match(system, /rather than deciding a person's emotional state from a single message/);
   assert.match(system, /do not pretend to remember it/);
   assert.match(system, /Do not ask a follow-up question.*unless a direct safety question is necessary/);
+  assert.match(system, /welcomed engagement, wedding, new baby or hard-earned success/);
   assert.equal(turns.at(-1)!.content, "Nailed it! 🥳");
 });
 test("consent-disabled memories are excluded even if supplied by a caller", () => {

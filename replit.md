@@ -26,6 +26,7 @@ A standalone AI psychological-wellbeing companion for astronauts. Research proto
 - Preserve the existing interface and working conversation features when enhancing personality. The approved voice is witty, playful, curious and emotionally adaptive, never mocking distress.
 - Mood adaptation belongs in the normal reply request, with tentative interpretation and no additional emotion-classifier call or hidden persistent mood profile. See `docs/personality.md`.
 - The companion's avatar should have a meaningful presence and use sophisticated micro-expressions, not exaggerated cartoons. Keep tone separate from idle/listening/thinking/replying activity; respect reduced motion. Natural, sparse emojis in conversation are welcome, never obligatory or used to dismiss distress.
+- The creator replaced the orb with the supplied cute creature reference: glossy black eyes, rounded head/body, turquoise circuitry and wings, luminous heart, rocket feet. Preserve that recognisable identity. Emotional colours should be clearly distinct, with full-body contextual reactions rather than random effects.
 - Never fabricate medical data, crew telemetry or mission emergency procedures.
 - Do not imply clinical validation, automatic emergency notification or end-to-end encryption.
 
