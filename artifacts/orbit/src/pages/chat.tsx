@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useParams } from 'wouter';
 import { useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
@@ -16,6 +16,8 @@ import {
   type Message,
 } from '@workspace/api-client-react';
 import { OrbitAvatar } from '@/components/orbit-avatar';
+import { useAvatarExpression } from '@/components/avatar-expression-context';
+import { inferAvatarTone } from '@/lib/avatar-tone';
 import { ConsentDialog } from '@/components/consent-dialog';
 import { ConfirmDialog } from '@/components/confirm-dialog';
 import { RequireAuth } from '@/components/require-auth';
@@ -46,7 +48,7 @@ function Bubble({ role, content, time, streaming }: { role: 'user' | 'assistant'
   const mine = role === 'user';
   return (
     <div className={cn('rise flex gap-3', mine ? 'justify-end' : 'justify-start')}>
-      {!mine && <OrbitAvatar size={34} thinking={streaming} className="mt-1" />}
+      {!mine && <OrbitAvatar size={34} thinking={Boolean(streaming)} className="mt-1" />}
       <div className={cn('flex max-w-[82%] flex-col', mine ? 'items-end' : 'items-start')}>
         <div
           className={cn(
@@ -85,6 +87,15 @@ function ChatInner({ id }: { id: string }) {
   const [text, setText] = useState('');
   const [draftRestored, setDraftRestored] = useState(false);
   const [pending, setPending] = useState<Pending | null>(null);
+  const { setExpression } = useAvatarExpression();
+  const avatarTone = useMemo(
+    () => conv.isError ? 'neutral' : inferAvatarTone(conv.data?.messages ?? [], pending?.content),
+    [conv.data?.messages, conv.isError, pending?.content],
+  );
+  const avatarThinking = pending?.status === 'streaming';
+  useEffect(() => {
+    setExpression({ tone: avatarTone, thinking: avatarThinking });
+  }, [avatarTone, avatarThinking, setExpression]);
   const [consentFor, setConsentFor] = useState<{ content: string; cmid?: string } | null>(null);
   const [renameOpen, setRenameOpen] = useState(false);
   const [renameVal, setRenameVal] = useState('');
@@ -216,6 +227,9 @@ function ChatInner({ id }: { id: string }) {
   return (
     <div className="mx-auto flex min-h-[calc(100dvh-8rem)] w-full max-w-3xl flex-col px-4 sm:px-6 md:min-h-[100dvh]">
       <header className="sticky top-0 z-20 -mx-4 flex items-center gap-3 border-b border-border/50 bg-background/70 px-4 py-4 backdrop-blur-xl sm:-mx-6 sm:px-6 md:top-0">
+        <span title="ORBIT’s expression follows conversation cues, not a mood assessment.">
+          <OrbitAvatar size={56} tone={avatarTone} thinking={avatarThinking} decorative={false} />
+        </span>
         <div className="min-w-0 flex-1">
           <h1 className="truncate text-lg font-normal" data-testid="text-conversation-title">{c.title}</h1>
           <p className="font-mono text-[10px] text-muted-foreground">Started {format(new Date(c.createdAt), 'MMM d, yyyy · HH:mm')}</p>

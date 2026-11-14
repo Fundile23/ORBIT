@@ -9,6 +9,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { AppShell } from '@/components/app-shell';
 import { OrbitAvatar } from '@/components/orbit-avatar';
+import { AvatarExpressionProvider } from '@/components/avatar-expression-context';
 import { clearAllDrafts } from '@/lib/drafts';
 import { usePageMeta } from '@/hooks/use-page-meta';
 import NotFound from '@/pages/not-found';
@@ -157,6 +158,7 @@ function AppRoutes() {
       <Route path="/sign-in/*?" component={SignInPage} />
       <Route path="/sign-up/*?" component={SignUpPage} />
       <Route>
+        <AvatarExpressionProvider>
         <AppShell>
           <RoutedErrorBoundary>
             <Switch>
@@ -171,6 +173,7 @@ function AppRoutes() {
             </Switch>
           </RoutedErrorBoundary>
         </AppShell>
+        </AvatarExpressionProvider>
       </Route>
     </Switch>
   );
