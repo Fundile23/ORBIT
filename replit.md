@@ -23,6 +23,8 @@ A standalone AI psychological-wellbeing companion for astronauts. Research proto
 - ORBIT is independent first. The partner's main healthcare application is a separate, unavailable project. Do not integrate now.
 - Later collaboration/integration will happen after GitHub code review. Keep APIs modular and avoid dependencies on the partner's application.
 - Creator-supplied conversation instructions govern ORBIT's voice. Preserve them in the server prompt.
+- Preserve the existing interface and working conversation features when enhancing personality. The approved voice is witty, playful, curious and emotionally adaptive, never mocking distress.
+- Mood adaptation belongs in the normal reply request, with tentative interpretation and no additional emotion-classifier call or hidden persistent mood profile. See `docs/personality.md`.
 - Never fabricate medical data, crew telemetry or mission emergency procedures.
 - Do not imply clinical validation, automatic emergency notification or end-to-end encryption.
 

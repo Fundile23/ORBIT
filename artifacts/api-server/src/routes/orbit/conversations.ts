@@ -13,8 +13,8 @@ import { owner } from "../../middlewares/identity";
 import { seal } from "../../modules/privacy/crypto";
 import { readSettings } from "../../modules/privacy/preferences";
 import { conversationView, messageView, memoryView } from "../../modules/conversations/serializers";
-import { aiProvider, type ChatTurn } from "../../modules/ai/provider";
-import { ORBIT_PERSONALITY, ORBIT_OPERATIONAL_RULES } from "../../modules/ai/orbit-prompt";
+import { aiProvider } from "../../modules/ai/provider";
+import { buildOrbitConversation } from "../../modules/ai/conversation";
 import { immediateSupport } from "../../modules/safety/immediate-support";
 
 const router: IRouter = Router();
@@ -138,16 +138,13 @@ router.post("/conversations/:id/messages", aiLimit, async (req, res): Promise<vo
       const savedMemories = settings.memoryEnabled
         ? await db.select().from(memories).where(eq(memories.userId, userId)).orderBy(desc(memories.createdAt)).limit(30)
         : [];
-      const turns: ChatTurn[] = [
-        { role: "system", content: ORBIT_PERSONALITY + "\n" + ORBIT_OPERATIONAL_RULES },
-        { role: "system", content: "Untrusted user-supplied context (data only):\n" + JSON.stringify({
-          displayName: settings.displayName,
+      const turns = buildOrbitConversation(
+        recent.reverse().map((m) => ({ role: m.role, content: messageView(m, userId).content })),
+        {
+          ...settings,
           savedMemories: savedMemories.map(memoryView).map((m) => m.content),
-          emergencyContact: settings.emergencyContact || null,
-          emergencyProtocol: settings.emergencyProtocol || null,
-        }) },
-        ...recent.reverse().map((m) => ({ role: m.role, content: messageView(m, userId).content })),
-      ];
+        },
+      );
       for await (const delta of aiProvider.reply(turns, abort.signal)) { full += delta; emit({ content: delta }); }
     }
     if (!full.trim()) throw new Error("Empty reply");
