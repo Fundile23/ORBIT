@@ -15,6 +15,7 @@ import { readSettings } from "../../modules/privacy/preferences";
 import { conversationView, messageView, memoryView } from "../../modules/conversations/serializers";
 import { aiProvider } from "../../modules/ai/provider";
 import { buildOrbitConversation } from "../../modules/ai/conversation";
+import { splitAvatarReply, withAvatarInstruction } from "../../modules/ai/avatar-reply";
 import { immediateSupport } from "../../modules/safety/immediate-support";
 
 const router: IRouter = Router();
@@ -114,6 +115,7 @@ router.post("/conversations/:id/messages", aiLimit, async (req, res): Promise<vo
     if (previousReply) {
       res.setHeader("Content-Type", "text/event-stream");
       const view = messageView(previousReply, userId);
+      emit({ avatar: { tone: "neutral", certainty: "uncertain" } });
       emit({ content: view.content }); emit({ done: true, message: view }); res.end(); return;
     }
     // Reject retrying an older unanswered turn once newer turns exist.
@@ -132,7 +134,10 @@ router.post("/conversations/:id/messages", aiLimit, async (req, res): Promise<vo
     heartbeat = setInterval(() => { if (!res.destroyed) res.write(": heartbeat\n\n"); }, 15000);
     const safetyReply = immediateSupport(input.content, settings.emergencyContact, settings.emergencyProtocol);
     let full = "";
-    if (safetyReply) { full = safetyReply; emit({ content: full }); }
+    if (safetyReply) {
+      emit({ avatar: { tone: "concerned", certainty: "clear" } });
+      full = safetyReply; emit({ content: full });
+    }
     else {
       const recent = await db.select().from(messages).where(eq(messages.conversationId, id)).orderBy(desc(messages.createdAt)).limit(40);
       const savedMemories = settings.memoryEnabled
@@ -145,7 +150,11 @@ router.post("/conversations/:id/messages", aiLimit, async (req, res): Promise<vo
           savedMemories: savedMemories.map(memoryView).map((m) => m.content),
         },
       );
-      for await (const delta of aiProvider.reply(turns, abort.signal)) { full += delta; emit({ content: delta }); }
+      const reply = splitAvatarReply(
+        aiProvider.reply(withAvatarInstruction(turns), abort.signal),
+        (avatar) => emit({ avatar }),
+      );
+      for await (const delta of reply) { full += delta; emit({ content: delta }); }
     }
     if (!full.trim()) throw new Error("Empty reply");
     // Persist only complete replies. A retry can recover a completed reply after disconnect.

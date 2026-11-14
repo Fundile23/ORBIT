@@ -126,7 +126,7 @@ export const DeleteConversationResponse = zod.void()
 
 
 /**
- * SSE: {content:string} deltas; {done:true,message:Message}; or {error:string}. Reuse clientMessageId on retry to avoid duplicate user messages.
+ * SSE data records: {avatar:AvatarCue} is an ephemeral, tentative presentation cue; {content:string} deltas; {done:true,message:Message}; or {error:string}. Missing/uncertain avatar cues mean neutral. Cues are not persisted or replayed from history. Reuse clientMessageId on retry to avoid duplicate user messages.
  */
 export const SendMessageParams = zod.object({
   "id": zod.coerce.string().uuid()

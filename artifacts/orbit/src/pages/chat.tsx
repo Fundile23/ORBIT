@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useLocation, useParams } from 'wouter';
 import { useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
@@ -17,7 +17,7 @@ import {
 } from '@workspace/api-client-react';
 import { OrbitAvatar } from '@/components/orbit-avatar';
 import { useAvatarExpression } from '@/components/avatar-expression-context';
-import { inferAvatarTone } from '@/lib/avatar-tone';
+import { currentAvatarTone, type TurnAvatarCue } from '@/lib/avatar-cue';
 import { AVATAR_ACTIVITY_LABELS, getAvatarActivity, getAvatarReaction, type AvatarReactionEvent } from '@/lib/avatar-presence';
 import { ConsentDialog } from '@/components/consent-dialog';
 import { ConfirmDialog } from '@/components/confirm-dialog';
@@ -88,13 +88,15 @@ function ChatInner({ id }: { id: string }) {
   const [text, setText] = useState('');
   const [draftRestored, setDraftRestored] = useState(false);
   const [pending, setPending] = useState<Pending | null>(null);
-  const [avatarReaction, setAvatarReaction] = useState<AvatarReactionEvent | null>(null);
+  const [turnReaction, setAvatarReaction] = useState<AvatarReactionEvent | null>(null);
+  const [avatarCue, setAvatarCue] = useState<TurnAvatarCue | null>(null);
   const [composerFocused, setComposerFocused] = useState(false);
   const { setExpression } = useAvatarExpression();
-  const avatarTone = useMemo(
-    () => conv.isError ? 'neutral' : inferAvatarTone(conv.data?.messages ?? [], pending?.content),
-    [conv.data?.messages, conv.isError, pending?.content],
-  );
+  const latestTurn = pending?.clientMessageId
+    ?? conv.data?.messages.filter((message) => message.role === 'user').at(-1)?.clientMessageId;
+  const avatarTone = conv.isError ? 'neutral' : currentAvatarTone(avatarCue, userId, latestTurn);
+  const avatarReaction = !conv.isError && avatarCue?.userId === userId
+    && avatarCue?.clientMessageId === latestTurn ? turnReaction : null;
   const avatarActivity = getAvatarActivity({
     writing: composerFocused,
     generating: pending?.status === 'streaming',
@@ -117,6 +119,8 @@ function ChatInner({ id }: { id: string }) {
     setText(d);
     setDraftRestored(Boolean(d));
     setPending(null);
+    setAvatarCue(null);
+    setAvatarReaction(null);
     firstSentRef.current = false;
     return () => abortRef.current?.abort();
   }, [id, userId]);
@@ -143,8 +147,8 @@ function ChatInner({ id }: { id: string }) {
         return;
       }
       const clientMessageId = cmid ?? uuid();
-      const history = qc.getQueryData<{ messages: Message[] }>(getGetConversationQueryKey(id))?.messages ?? [];
-      setAvatarReaction({ key: clientMessageId, kind: getAvatarReaction(inferAvatarTone(history, content)) });
+      setAvatarCue(null);
+      setAvatarReaction(null);
       const ctrl = new AbortController();
       abortRef.current?.abort();
       abortRef.current = ctrl;
@@ -161,12 +165,19 @@ function ChatInner({ id }: { id: string }) {
           { content, clientMessageId },
           (delta) => setPending((p) => (p && p.clientMessageId === clientMessageId ? { ...p, reply: p.reply + delta } : p)),
           ctrl.signal,
+          (cue) => {
+            if (!userId || ctrl.signal.aborted || abortRef.current !== ctrl) return;
+            setAvatarCue({ userId, clientMessageId, tone: cue.tone });
+            setAvatarReaction({ key: clientMessageId, kind: getAvatarReaction(cue.tone) });
+          },
         );
         await refreshAll();
         setPending((p) => (p?.clientMessageId === clientMessageId ? null : p));
       } catch (err) {
         const aborted = (err as Error)?.name === 'AbortError';
         if (aborted && abortRef.current !== ctrl) return;
+        setAvatarCue(null);
+        setAvatarReaction(null);
         const msg = aborted ? 'You stopped this reply.' : err instanceof StreamError ? err.message : describeError(err);
         setPending((p) => (p?.clientMessageId === clientMessageId ? { ...p, status: 'failed', error: msg } : p));
         qc.invalidateQueries({ queryKey: getGetConversationQueryKey(id) });

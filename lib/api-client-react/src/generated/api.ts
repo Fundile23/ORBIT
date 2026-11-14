@@ -38,6 +38,7 @@ import type {
   Memory,
   MemoryInput,
   MessageInput,
+  MessageStreamEvent,
   Overview,
   Settings,
   SettingsInput
@@ -692,10 +693,10 @@ export const getSendMessageUrl = (id: string,) => {
 }
 
 /**
- * SSE: {content:string} deltas; {done:true,message:Message}; or {error:string}. Reuse clientMessageId on retry to avoid duplicate user messages.
+ * SSE data records: {avatar:AvatarCue} is an ephemeral, tentative presentation cue; {content:string} deltas; {done:true,message:Message}; or {error:string}. Missing/uncertain avatar cues mean neutral. Cues are not persisted or replayed from history. Reuse clientMessageId on retry to avoid duplicate user messages.
  */
 export const sendMessage = async (id: string,
-    messageInput: MessageInput, options?: Parameters<typeof customFetch>[1]): Promise<string> => {
+    messageInput: MessageInput, options?: Parameters<typeof customFetch>[1]): Promise<MessageStreamEvent> => {
 
     const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
     if (!h) return {};
@@ -711,7 +712,7 @@ export const sendMessage = async (id: string,
     }
     return headers;
   };
-return customFetch<string>(getSendMessageUrl(id),
+return customFetch<MessageStreamEvent>(getSendMessageUrl(id),
   {
     ...options,
     method: 'POST',

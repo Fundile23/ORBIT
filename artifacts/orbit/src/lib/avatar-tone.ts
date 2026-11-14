@@ -1,5 +1,6 @@
+import type { AvatarCueTone } from '@workspace/api-client-react';
 /** Tentative decorative cues, never a diagnosis or a safety/escalation signal. */
-export type AvatarTone = 'neutral' | 'joyful' | 'excited' | 'playful' | 'supportive' | 'calm' | 'tired' | 'curious' | 'concerned' | 'focused' | 'frustrated' | 'surprised';
+export type AvatarTone = AvatarCueTone;
 type Turn = { role: string; content: string };
 const tones: AvatarTone[] = ['neutral', 'joyful', 'excited', 'playful', 'supportive', 'calm', 'tired', 'curious', 'concerned', 'focused', 'frustrated', 'surprised'];
 type Scores = Record<AvatarTone, number>;

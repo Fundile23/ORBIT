@@ -82,7 +82,7 @@ paths:
       - { $ref: "#/components/parameters/Id" }
     post:
       operationId: sendMessage
-      description: "SSE: {content:string} deltas; {done:true,message:Message}; or {error:string}. Reuse clientMessageId on retry to avoid duplicate user messages."
+      description: "SSE data records: {avatar:AvatarCue} is an ephemeral, tentative presentation cue; {content:string} deltas; {done:true,message:Message}; or {error:string}. Missing/uncertain avatar cues mean neutral. Cues are not persisted or replayed from history. Reuse clientMessageId on retry to avoid duplicate user messages."
       requestBody:
         required: true
         content:
@@ -93,7 +93,7 @@ paths:
           description: Streamed AI reply
           content:
             text/event-stream:
-              schema: { type: string }
+              schema: { $ref: "#/components/schemas/MessageStreamEvent" }
         "409": { description: Another reply is generating }
         "503": { description: AI unavailable; no fabricated reply }
   /v1/conversations/{id}/summary:
@@ -306,6 +306,35 @@ components:
         content: { type: string }
         createdAt: { type: string, format: date-time }
         clientMessageId: { type: [string, "null"] }
+    AvatarCue:
+      type: object
+      additionalProperties: false
+      description: Tentative conversational presentation, never a diagnosis or safety assessment.
+      required: [tone, certainty]
+      properties:
+        tone:
+          type: string
+          enum: [neutral, joyful, excited, playful, supportive, calm, tired, curious, concerned, focused, frustrated, surprised]
+        certainty: { type: string, enum: [clear, uncertain] }
+    MessageStreamEvent:
+      oneOf:
+        - type: object
+          required: [avatar]
+          properties:
+            avatar: { $ref: "#/components/schemas/AvatarCue" }
+        - type: object
+          required: [content]
+          properties:
+            content: { type: string }
+        - type: object
+          required: [done, message]
+          properties:
+            done: { type: boolean, enum: [true] }
+            message: { $ref: "#/components/schemas/Message" }
+        - type: object
+          required: [error]
+          properties:
+            error: { type: string }
     ConversationDetail:
       allOf:
         - { $ref: "#/components/schemas/Conversation" }

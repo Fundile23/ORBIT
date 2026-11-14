@@ -35,12 +35,16 @@ Send `POST /api/v1/conversations/{id}/messages`:
 Events:
 
 ```text
+data: {"avatar":{"tone":"supportive","certainty":"clear"}}
+
 data: {"content":"That sounds"}
 
 data: {"content":" difficult."}
 
 data: {"done":true,"message":{"id":"...","role":"assistant","content":"That sounds difficult.","clientMessageId":null,"createdAt":"..."}}
 ```
+
+`avatar` is an optional ephemeral presentation cue from the same generation request, not a measured mood or diagnosis. Allowlisted tones and certainty values are defined in OpenAPI `AvatarCue`. Treat missing, invalid or `uncertain` cues as neutral. Do not display metadata as dialogue, persist it as a mood profile, or replay celebrations from saved history. Cached-reply retries emit neutral. The immediate-support path emits concerned without a model call. Clients that ignore this additive SSE record continue to work.
 
 On failure, `data: {"error":"..."}` ends the stream. Retry the **same content with the same clientMessageId**, not a new UUID. 409 means another reply is running, or a retry conflicts with a newer turn. Do not auto-send offline drafts. A model reply can be delayed; this endpoint says nothing about Earth-to-space communications latency.
 

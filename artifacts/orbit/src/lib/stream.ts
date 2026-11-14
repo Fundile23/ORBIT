@@ -1,4 +1,5 @@
-import type { Message } from '@workspace/api-client-react';
+import type { AvatarCue, Message } from '@workspace/api-client-react';
+import { parseAvatarCue } from './avatar-cue';
 
 export type StreamFailure = 'network' | 'http' | 'server' | 'interrupted';
 
@@ -12,7 +13,7 @@ export class StreamError extends Error {
   }
 }
 
-type Parsed = { content?: unknown; done?: unknown; message?: Message; error?: unknown };
+type Parsed = { content?: unknown; done?: unknown; message?: Message; error?: unknown; avatar?: unknown };
 
 /**
  * POSTs a message and reads the SSE reply. Handles events split across
@@ -23,6 +24,7 @@ export async function streamMessage(
   body: { content: string; clientMessageId: string },
   onDelta: (text: string) => void,
   signal?: AbortSignal,
+  onAvatar?: (cue: AvatarCue) => void,
 ): Promise<Message> {
   let res: Response;
   try {
@@ -53,6 +55,7 @@ export async function streamMessage(
   const reader = res.body.getReader();
   const decoder = new TextDecoder();
   let buffer = '';
+  let receivedAvatar = false;
 
   const handleEvent = (raw: string): Message | null => {
     const data = raw
@@ -68,6 +71,10 @@ export async function streamMessage(
       return null;
     }
     if (typeof parsed.error === 'string') throw new StreamError(parsed.error, 'server');
+    if (!receivedAvatar && parsed.avatar !== undefined) {
+      receivedAvatar = true;
+      onAvatar?.(parseAvatarCue(parsed.avatar) ?? { tone: 'neutral', certainty: 'uncertain' });
+    }
     if (parsed.done && parsed.message) return parsed.message;
     if (typeof parsed.content === 'string') onDelta(parsed.content);
     return null;

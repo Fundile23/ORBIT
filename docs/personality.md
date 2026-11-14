@@ -10,7 +10,7 @@ The version-controlled personality is in `artifacts/api-server/src/modules/ai/or
 
 Recognition is performed **inside the existing model reply request**, not by a separate emotion-classification API. The model considers the user's wording, explicit feelings, energy, recent conversational pattern, humour/irony and stated preferences. Those cues guide tone, length, questions and humour in the generated response.
 
-Interpretation is tentative. No mood diagnosis, model-generated confidence score, persistent emotional profile or covert background monitoring is created. The model should ask a natural clarifier when ambiguity materially changes how to respond, rather than treating punctuation or a short message as proof of distress. The separate browser avatar uses temporary, uncertainty-aware presentation weights; see `avatar-expressions.md`. These are not clinical scores and are not saved.
+Interpretation is tentative. No mood diagnosis, model-generated confidence score, persistent emotional profile or covert background monitoring is created. The model should ask a natural clarifier when ambiguity materially changes how to respond, rather than treating punctuation or a short message as proof of distress. The avatar follows a validated, temporary presentation cue from the same reply request; see `avatar-expressions.md`. Uncertain or missing cues mean neutral, not a keyword-based guess. These cues are not clinical assessments and are not saved.
 
 The newest disclosure or explicit preference overrides earlier joking. Excitement can receive enthusiasm; boredom can receive a surprising topic; invited banter can receive light teasing about a harmless situation. Loneliness, anxiety and genuine distress are never targets. Exhaustion calls for a short, low-pressure reply.
 
@@ -29,7 +29,7 @@ Humour is optional, not required in every turn. Sarcasm must be gentle and welco
 
 Explicit high-risk language still takes the existing immediate-support route before playful generation. Other possible danger, including indirect expressions, is addressed by the model's safety rules. That combination is not a clinically validated assessment or comprehensive crisis detector.
 
-The expressive avatar enhances the existing UI; public API, authentication, streaming transport, persistence and consent controls are unchanged. ORBIT may use sparse, welcomed emojis and conversational amusement without claiming human emotions. Explicit no-emoji preferences and distress take precedence.
+The expressive avatar enhances the existing UI. The SSE stream adds an optional `avatar` record; authentication, persisted message contracts and consent controls are unchanged. ORBIT may use sparse, welcomed emojis and conversational amusement without claiming human emotions. Explicit no-emoji preferences and distress take precedence.
 
 ## Repeatable evaluation
 

@@ -52,6 +52,51 @@ export interface Message {
   clientMessageId: string | null;
 }
 
+export type AvatarCueTone = typeof AvatarCueTone[keyof typeof AvatarCueTone];
+
+
+export const AvatarCueTone = {
+  neutral: 'neutral',
+  joyful: 'joyful',
+  excited: 'excited',
+  playful: 'playful',
+  supportive: 'supportive',
+  calm: 'calm',
+  tired: 'tired',
+  curious: 'curious',
+  concerned: 'concerned',
+  focused: 'focused',
+  frustrated: 'frustrated',
+  surprised: 'surprised',
+} as const;
+
+export type AvatarCueCertainty = typeof AvatarCueCertainty[keyof typeof AvatarCueCertainty];
+
+
+export const AvatarCueCertainty = {
+  clear: 'clear',
+  uncertain: 'uncertain',
+} as const;
+
+/**
+ * Tentative conversational presentation, never a diagnosis or safety assessment.
+ */
+export interface AvatarCue {
+  tone: AvatarCueTone;
+  certainty: AvatarCueCertainty;
+}
+
+export type MessageStreamEvent = {
+  avatar: AvatarCue;
+} | {
+  content: string;
+} | {
+  done: true;
+  message: Message;
+} | {
+  error: string;
+};
+
 export type ConversationDetail = Conversation & {
   messages: Message[];
 };

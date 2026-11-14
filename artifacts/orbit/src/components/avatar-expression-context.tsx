@@ -10,7 +10,7 @@ const ExpressionContext = createContext<Expression & { setExpression: (expressio
   ...neutral, setExpression: () => undefined,
 });
 
-/** Ephemeral, route- and account-scoped. Never stored or sent to an API. */
+/** Ephemeral, route- and account-scoped. Server cues are never persisted here. */
 export function AvatarExpressionProvider({ children }: { children: ReactNode }) {
   const [location] = useLocation();
   const { userId, signedIn } = usePersonal();

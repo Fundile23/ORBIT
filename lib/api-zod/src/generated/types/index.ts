@@ -6,6 +6,9 @@
  * OpenAPI spec version: 1.0.0
  */
 
+export * from './avatarCue';
+export * from './avatarCueCertainty';
+export * from './avatarCueTone';
 export * from './checkIn';
 export * from './checkInInput';
 export * from './conversation';
@@ -22,6 +25,7 @@ export * from './memoryInput';
 export * from './message';
 export * from './messageInput';
 export * from './messageRole';
+export * from './messageStreamEvent';
 export * from './overview';
 export * from './overviewCommunication';
 export * from './settings';
