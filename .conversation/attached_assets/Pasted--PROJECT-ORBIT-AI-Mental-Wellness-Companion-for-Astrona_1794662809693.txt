@@ -1,0 +1,176 @@
+# PROJECT: ORBIT — AI Mental Wellness Companion for Astronauts
+
+Build a fully functional AI-powered mental wellness companion as a module of an existing astronaut healthcare platform.
+
+IMPORTANT: This is NOT a standalone healthcare website. It is one integrated feature within a larger astronaut healthcare management system. Reuse the existing application's technology stack, authentication, design system and navigation. Do not create duplicate authentication or an unrelated application.
+
+## 1. PURPOSE
+
+ORBIT is an emotionally intelligent AI companion designed specifically for astronauts undertaking long-duration space missions.
+
+Its purpose is to support astronauts experiencing:
+- Loneliness and social isolation.
+- Homesickness and separation from family.
+- Stress and anxiety.
+- Emotional exhaustion.
+- Sleep disturbances.
+- Interpersonal conflicts.
+- Psychological difficulties associated with confinement and microgravity.
+
+ORBIT should provide a natural, conversational experience similar to Replika AI, but its purpose is mental wellness rather than romantic companionship.
+
+## 2. AI PERSONALITY
+
+Create an AI companion named ORBIT.
+
+ORBIT must:
+- Communicate naturally and empathetically.
+- Remember relevant information from previous conversations, with appropriate user consent.
+- Recognise emotional patterns over time.
+- Ask thoughtful follow-up questions.
+- Encourage astronauts to express their feelings.
+- Offer practical, evidence-informed wellness exercises.
+- Avoid sounding robotic, repetitive or excessively formal.
+- Never judge, shame or dismiss the astronaut.
+
+The AI should not constantly ask clinical assessment questions. Conversations should feel natural.
+
+## 3. CHAT INTERFACE
+
+Create a modern conversational interface with:
+
+- A welcoming ORBIT avatar.
+- Real-time AI messaging.
+- User and AI message bubbles.
+- Typing indicators.
+- Conversation timestamps.
+- Conversation history.
+- Clear conversation controls.
+- Suggested conversation starters.
+- Responsive desktop and mobile layouts.
+
+Example conversation starters:
+
+- "I've been feeling isolated lately."
+- "I'm having trouble sleeping."
+- "I miss my family."
+- "I've been feeling overwhelmed."
+- "I just need someone to talk to."
+
+## 4. AI CONVERSATION ENGINE
+
+Connect the chat interface to a real language model API through a secure backend.
+
+The AI must maintain conversational context and provide consistent responses.
+
+Implement:
+- Multi-turn conversations.
+- Persistent conversation history.
+- Context-aware responses.
+- User-controlled memory.
+- Appropriate conversation summaries.
+- Secure API key management.
+
+Do not expose API keys in frontend code.
+
+Do not build a static chatbot that merely displays predefined responses. The AI must actually generate contextual responses.
+
+## 5. MENTAL WELLNESS FEATURES
+
+Create the following features:
+
+A. Daily emotional check-in:
+Allow astronauts to record their mood, stress level and general wellbeing.
+
+B. Guided wellness exercises:
+Include breathing exercises, grounding techniques, relaxation exercises and reflective journaling.
+
+C. Mood history:
+Display emotional wellbeing trends over time using charts.
+
+D. Sleep and stress reflections:
+Allow the astronaut to discuss sleep difficulties and stress with ORBIT.
+
+E. Personalised support:
+Use consented historical information to make conversations more relevant.
+
+## 6. SAFETY AND MEDICAL BOUNDARIES
+
+ORBIT is an AI mental wellness companion, NOT a licensed psychologist, psychiatrist or emergency medical service.
+
+It must:
+- Never claim to be a human psychologist.
+- Never diagnose psychiatric conditions.
+- Never prescribe medication.
+- Never discourage professional medical assistance.
+- Recognise expressions of severe distress and potential self-harm.
+- Respond to crisis situations with supportive, direct language.
+- Encourage immediate contact with the designated onboard medical officer or appropriate emergency support.
+- Follow the mission's approved emergency escalation protocol.
+
+Clearly communicate that the service is AI-powered.
+
+Protect sensitive conversations using appropriate access controls and encryption. Conversations must not automatically become visible to other crew members. Any clinical sharing must follow explicit consent and defined emergency-safety policies.
+
+## 7. ASTRONAUT HEALTHCARE INTEGRATION
+
+Design ORBIT to integrate with the larger astronaut healthcare platform.
+
+Where available, allow authorised access to:
+- Astronaut identity and profile.
+- Sleep information.
+- Health monitoring information.
+- Previous medical assessments.
+- Relevant psychological check-in history.
+
+Do not invent or fabricate medical data.
+
+Use existing application interfaces and database structures where possible. If integrations are not yet available, implement clearly labelled demonstration data and integration placeholders.
+
+## 8. SPACE MISSION REQUIREMENTS
+
+The application must consider long-duration space missions.
+
+Implement:
+- A graceful offline experience.
+- Access to previously downloaded wellness exercises.
+- Local draft messages when connectivity is unavailable.
+- Message synchronisation when connectivity returns.
+- Clear indicators showing whether communication is live, delayed or unavailable.
+
+Do not pretend that real-time communication is possible when signal delays prevent it.
+
+## 9. VISUAL DESIGN
+
+Create a premium, futuristic but comfortable interface.
+
+Design direction:
+- Dark space-inspired background.
+- Deep navy and subtle purple tones.
+- Soft blue accent lighting.
+- Clean typography.
+- Rounded conversation bubbles.
+- Minimal visual clutter.
+- Friendly and approachable AI avatar.
+
+Avoid making the application look like a hospital management system.
+
+It should feel like a safe personal space where an astronaut can have a conversation without feeling judged.
+
+## 10. IMPLEMENTATION REQUIREMENTS
+
+Build the actual working component, not just a visual mockup.
+
+Implement the frontend, backend integration, conversation persistence, AI connection and responsive design.
+
+Use the existing project's framework and database.
+
+Do not overwrite or break existing application features.
+
+If an external API credential or integration is unavailable, explain exactly what configuration is needed and provide a clearly labelled demonstration mode.
+
+## FINAL OBJECTIVE
+
+Deliver a functional AI mental wellness companion that an astronaut can open during a long-duration space mission, talk to naturally, revisit previous conversations, track emotional wellbeing and access appropriate psychological support.
+
+The experience should feel personal, intelligent, supportive and specifically designed for the psychological challenges of living in space.

@@ -1,0 +1,36 @@
+I want to clarify the architecture and development approach for this project before we begin building.
+
+We are a two-person development team working on a larger astronaut health-monitoring platform.
+
+**Our development strategy is to build two independent systems first and integrate them later.**
+
+**1. Main Astronaut Healthcare System**
+- My lab partner is developing this system independently using Claude.
+- It will handle the broader astronaut health-monitoring functionality, including physical health indicators, health assessments, monitoring and alerts.
+- This is a separate project and is not currently available for integration.
+
+**2. ORBIT – AI Psychological Support System**
+- I am responsible for developing ORBIT independently using Replit.
+- ORBIT will serve as an AI-powered psychological support companion for astronauts during long-duration space missions.
+- It should provide conversational mental health support, emotional check-ins, stress management guidance, isolation and confinement support, and general psychological wellbeing assistance.
+- ORBIT must be designed as a standalone application with its own frontend, backend and clearly defined architecture.
+
+**3. Future Integration**
+Once both systems are sufficiently developed:
+- We will push both independent projects to GitHub.
+- We will organise and review their codebases.
+- We will then integrate them into one unified astronaut healthcare platform.
+- We may use Visual Studio or Replit for the integration process.
+
+**Important development requirements:**
+1. Do not assume that the main healthcare application already exists in this Replit workspace.
+2. Do not attempt to integrate ORBIT into another application at this stage.
+3. Build ORBIT as a modular, standalone system.
+4. Keep its architecture clean and integration-friendly.
+5. Design its APIs so that the main healthcare application can communicate with ORBIT in the future.
+6. Avoid unnecessary dependencies on the other system.
+7. Keep the possibility of GitHub-based collaboration and integration in mind.
+
+For now, our sole development objective is to build ORBIT independently.
+
+Before generating code, help me establish the recommended technology stack, project structure, architecture and implementation plan for ORBIT. Explain your recommendations before making major architectural decisions.

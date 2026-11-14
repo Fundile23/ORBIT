@@ -1,45 +1,36 @@
-# [Project name]
+# ORBIT
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+A standalone AI psychological-wellbeing companion for astronauts. Research prototype, not clinical or flight-certified care.
 
-## Run & Operate
+## Run & operate
 
-- `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
-- `pnpm run typecheck` — full typecheck across all packages
-- `pnpm run build` — typecheck + build all packages
-- `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
-- `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
-- Required env: `DATABASE_URL` — Postgres connection string
+- `pnpm --filter @workspace/api-server run dev` — managed API workflow.
+- `pnpm --filter @workspace/orbit run dev` — managed frontend workflow.
+- `pnpm run typecheck` — full workspace typecheck.
+- `pnpm --filter @workspace/api-spec run codegen` — regenerate hooks/validators after contract changes.
+- `pnpm --filter @workspace/db run push` — development schema only.
 
-## Stack
+## Stack and source of truth
 
-- pnpm workspaces, Node.js 24, TypeScript 5.9
-- API: Express 5
-- DB: PostgreSQL + Drizzle ORM
-- Validation: Zod (`zod/v4`), `drizzle-zod`
-- API codegen: Orval (from OpenAPI spec)
-- Build: esbuild (CJS bundle)
+- pnpm, Node/TypeScript; Express backend in `artifacts/api-server`.
+- React/Vite frontend in `artifacts/orbit`, root preview.
+- PostgreSQL/Drizzle in `lib/db`; OpenAPI in `lib/api-spec/openapi.yaml`.
+- Clerk sign-in; hosted OpenAI behind `modules/ai/provider.ts`.
+- Read `README.md`, `docs/architecture.md`, `docs/integration.md` before cross-cutting work.
 
-## Where things live
+## Standing scope
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- ORBIT is independent first. The partner's main healthcare application is a separate, unavailable project. Do not integrate now.
+- Later collaboration/integration will happen after GitHub code review. Keep APIs modular and avoid dependencies on the partner's application.
+- Creator-supplied conversation instructions govern ORBIT's voice. Preserve them in the server prompt.
+- Never fabricate medical data, crew telemetry or mission emergency procedures.
+- Do not imply clinical validation, automatic emergency notification or end-to-end encryption.
 
-## Architecture decisions
+## Privacy and safety
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
-
-## Product
-
-_Describe the high-level user-facing capabilities of this app once they exist._
-
-## User preferences
-
-_Populate as you build — explicit user instructions worth remembering across sessions._
-
-## Gotchas
-
-_Populate as you build — sharp edges, "always run X before Y" rules._
-
-## Pointers
-
-- See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details
+- All personal routes derive ownership from verified Clerk identity. No guest/shared data identity.
+- AI processing consent and long-term memory start off. Memory is explicitly saved by the user, not automatically extracted.
+- Journals/check-ins are not automatically passed to the hosted model.
+- Personal text payloads use AES-256-GCM. `SESSION_SECRET` is the stable encryption root: changing it without re-encryption loses access to records.
+- No private content in logs, browser persistent query caches or service-worker API caching.
+- Settings emergency guidance is user-entered, not independently approved; no automatic escalation.

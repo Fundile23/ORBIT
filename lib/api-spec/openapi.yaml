@@ -1,36 +1,410 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
-  version: 0.1.0
-  description: API specification
+  version: 1.0.0
+  description: ORBIT standalone wellbeing API. All v1 personal resources require a signed-in owner. AI is not emergency care.
 servers:
   - url: /api
-    description: Base API path
-tags:
-  - name: health
-    description: Health operations
+security:
+  - sessionCookie: []
 paths:
   /healthz:
     get:
       operationId: healthCheck
-      tags: [health]
-      summary: Health check
-      description: Returns server health status
+      security: []
       responses:
         "200":
           description: Healthy
           content:
             application/json:
-              schema:
-                $ref: "#/components/schemas/HealthStatus"
+              schema: { $ref: "#/components/schemas/HealthStatus" }
+  /v1/overview:
+    get:
+      operationId: getOverview
+      responses:
+        "200":
+          description: Actual user activity, never fabricated mission data
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Overview" }
+  /v1/conversations:
+    get:
+      operationId: listConversations
+      responses:
+        "200":
+          description: Conversations newest first
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: "#/components/schemas/Conversation" } }
+    post:
+      operationId: createConversation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ConversationInput" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Conversation" }
+  /v1/conversations/{id}:
+    parameters:
+      - { $ref: "#/components/parameters/Id" }
+    get:
+      operationId: getConversation
+      responses:
+        "200":
+          description: Conversation with chronological messages
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ConversationDetail" }
+    patch:
+      operationId: updateConversation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ConversationInput" }
+      responses:
+        "200":
+          description: Renamed
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Conversation" }
+    delete:
+      operationId: deleteConversation
+      responses:
+        "204": { description: Deleted with messages }
+  /v1/conversations/{id}/messages:
+    parameters:
+      - { $ref: "#/components/parameters/Id" }
+    post:
+      operationId: sendMessage
+      description: "SSE: {content:string} deltas; {done:true,message:Message}; or {error:string}. Reuse clientMessageId on retry to avoid duplicate user messages."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/MessageInput" }
+      responses:
+        "200":
+          description: Streamed AI reply
+          content:
+            text/event-stream:
+              schema: { type: string }
+        "409": { description: Another reply is generating }
+        "503": { description: AI unavailable; no fabricated reply }
+  /v1/conversations/{id}/summary:
+    parameters:
+      - { $ref: "#/components/parameters/Id" }
+    post:
+      operationId: summarizeConversation
+      responses:
+        "200":
+          description: AI summary of this conversation only
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Conversation" }
+  /v1/check-ins:
+    get:
+      operationId: listCheckIns
+      responses:
+        "200":
+          description: Check-ins chronological
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: "#/components/schemas/CheckIn" } }
+    post:
+      operationId: createCheckIn
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CheckInInput" }
+      responses:
+        "201":
+          description: Recorded
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CheckIn" }
+  /v1/check-ins/{id}:
+    parameters:
+      - { $ref: "#/components/parameters/Id" }
+    patch:
+      operationId: updateCheckIn
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CheckInInput" }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CheckIn" }
+    delete:
+      operationId: deleteCheckIn
+      responses:
+        "204": { description: Deleted }
+  /v1/exercises:
+    get:
+      operationId: listExercises
+      security: []
+      responses:
+        "200":
+          description: Educational exercises, no medical data
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: "#/components/schemas/Exercise" } }
+  /v1/journal:
+    get:
+      operationId: listJournalEntries
+      responses:
+        "200":
+          description: Private journal, newest first; not sent to AI
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: "#/components/schemas/JournalEntry" } }
+    post:
+      operationId: createJournalEntry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/JournalInput" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/JournalEntry" }
+  /v1/journal/{id}:
+    parameters:
+      - { $ref: "#/components/parameters/Id" }
+    patch:
+      operationId: updateJournalEntry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/JournalInput" }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/JournalEntry" }
+    delete:
+      operationId: deleteJournalEntry
+      responses:
+        "204": { description: Deleted }
+  /v1/settings:
+    get:
+      operationId: getSettings
+      responses:
+        "200":
+          description: Privacy and personal preferences
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Settings" }
+    patch:
+      operationId: updateSettings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/SettingsInput" }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Settings" }
+  /v1/memories:
+    get:
+      operationId: listMemories
+      responses:
+        "200":
+          description: Explicitly saved memories only
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: "#/components/schemas/Memory" } }
+    post:
+      operationId: createMemory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/MemoryInput" }
+      responses:
+        "201":
+          description: Saved; requires memoryEnabled consent
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Memory" }
+  /v1/memories/{id}:
+    parameters:
+      - { $ref: "#/components/parameters/Id" }
+    delete:
+      operationId: deleteMemory
+      responses:
+        "204": { description: Deleted }
+  /v1/data/export:
+    get:
+      operationId: exportData
+      responses:
+        "200":
+          description: Downloadable JSON personal data
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/DataExport" }
+  /v1/data:
+    delete:
+      operationId: deleteAllData
+      responses:
+        "204": { description: All ORBIT personal records deleted; identity account remains }
 components:
+  securitySchemes:
+    sessionCookie: { type: apiKey, in: cookie, name: __session }
+  parameters:
+    Id: { name: id, in: path, required: true, schema: { type: string, format: uuid } }
   schemas:
     HealthStatus:
       type: object
+      required: [status]
       properties:
-        status:
-          type: string
-      required:
-        - status
-
+        status: { type: string }
+    ConversationInput:
+      type: object
+      required: [title]
+      properties:
+        title: { type: string, minLength: 1, maxLength: 120 }
+    Conversation:
+      type: object
+      required: [id, title, summary, createdAt, updatedAt]
+      properties:
+        id: { type: string }
+        title: { type: string }
+        summary: { type: [string, "null"] }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    MessageInput:
+      type: object
+      required: [content, clientMessageId]
+      properties:
+        content: { type: string, minLength: 1, maxLength: 8000 }
+        clientMessageId: { type: string, format: uuid }
+    Message:
+      type: object
+      required: [id, role, content, createdAt, clientMessageId]
+      properties:
+        id: { type: string }
+        role: { type: string, enum: [user, assistant] }
+        content: { type: string }
+        createdAt: { type: string, format: date-time }
+        clientMessageId: { type: [string, "null"] }
+    ConversationDetail:
+      allOf:
+        - { $ref: "#/components/schemas/Conversation" }
+        - type: object
+          required: [messages]
+          properties:
+            messages: { type: array, items: { $ref: "#/components/schemas/Message" } }
+    CheckInInput:
+      type: object
+      required: [mood, stress, wellbeing, sleepHours, note]
+      properties:
+        mood: { type: integer, minimum: 1, maximum: 5 }
+        stress: { type: integer, minimum: 1, maximum: 10 }
+        wellbeing: { type: integer, minimum: 1, maximum: 10 }
+        sleepHours: { type: [number, "null"], minimum: 0, maximum: 24 }
+        note: { type: string, maxLength: 4000 }
+    CheckIn:
+      allOf:
+        - { $ref: "#/components/schemas/CheckInInput" }
+        - type: object
+          required: [id, createdAt]
+          properties:
+            id: { type: string }
+            createdAt: { type: string, format: date-time }
+    Exercise:
+      type: object
+      required: [id, title, category, durationMinutes, description, steps]
+      properties:
+        id: { type: string }
+        title: { type: string }
+        category: { type: string, enum: [breathing, grounding, relaxation, reflection] }
+        durationMinutes: { type: integer }
+        description: { type: string }
+        steps: { type: array, items: { type: string } }
+    JournalInput:
+      type: object
+      required: [title, content]
+      properties:
+        title: { type: string, minLength: 1, maxLength: 120 }
+        content: { type: string, maxLength: 20000 }
+    JournalEntry:
+      allOf:
+        - { $ref: "#/components/schemas/JournalInput" }
+        - type: object
+          required: [id, createdAt, updatedAt]
+          properties:
+            id: { type: string }
+            createdAt: { type: string, format: date-time }
+            updatedAt: { type: string, format: date-time }
+    SettingsInput:
+      type: object
+      properties:
+        displayName: { type: string, maxLength: 60 }
+        memoryEnabled: { type: boolean }
+        aiConsent: { type: boolean }
+        emergencyContact: { type: string, maxLength: 200 }
+        emergencyProtocol: { type: string, maxLength: 2000 }
+    Settings:
+      type: object
+      required: [displayName, memoryEnabled, aiConsent, emergencyContact, emergencyProtocol]
+      properties:
+        displayName: { type: string }
+        memoryEnabled: { type: boolean }
+        aiConsent: { type: boolean }
+        emergencyContact: { type: string }
+        emergencyProtocol: { type: string }
+    MemoryInput:
+      type: object
+      required: [content]
+      properties:
+        content: { type: string, minLength: 1, maxLength: 1000 }
+    Memory:
+      type: object
+      required: [id, content, createdAt]
+      properties:
+        id: { type: string }
+        content: { type: string }
+        createdAt: { type: string, format: date-time }
+    Overview:
+      type: object
+      required: [conversationCount, checkInCount, journalCount, averageMood, averageStress, latestCheckIn, aiAvailable, communication, emergencyContact, emergencyProtocol]
+      properties:
+        conversationCount: { type: integer }
+        checkInCount: { type: integer }
+        journalCount: { type: integer }
+        averageMood: { type: [number, "null"] }
+        averageStress: { type: [number, "null"] }
+        latestCheckIn: { anyOf: [{ $ref: "#/components/schemas/CheckIn" }, { type: "null" }] }
+        aiAvailable: { type: boolean }
+        communication: { type: string, enum: [online, unavailable] }
+        emergencyContact: { type: string }
+        emergencyProtocol: { type: string }
+    DataExport:
+      type: object
+      required: [exportedAt, settings, conversations, checkIns, journal, memories]
+      properties:
+        exportedAt: { type: string }
+        settings: { $ref: "#/components/schemas/Settings" }
+        conversations: { type: array, items: { $ref: "#/components/schemas/ConversationDetail" } }
+        checkIns: { type: array, items: { $ref: "#/components/schemas/CheckIn" } }
+        journal: { type: array, items: { $ref: "#/components/schemas/JournalEntry" } }
+        memories: { type: array, items: { $ref: "#/components/schemas/Memory" } }

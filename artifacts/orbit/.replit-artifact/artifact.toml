@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "ORBIT"
+description = "A private AI psychological wellbeing companion for astronauts, with contextual conversations, daily emotional check-ins, guided exercises and consent-controlled memory. Standalone and integration-ready."
+version = "1.0.0"
+id = "artifacts/orbit"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 22982
+
+[services.development]
+run = "pnpm --filter @workspace/orbit run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/orbit", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/orbit/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "22982"
+BASE_PATH = "/"
