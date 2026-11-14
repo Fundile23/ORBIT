@@ -18,6 +18,7 @@ import {
 import { OrbitAvatar } from '@/components/orbit-avatar';
 import { useAvatarExpression } from '@/components/avatar-expression-context';
 import { inferAvatarTone } from '@/lib/avatar-tone';
+import { AVATAR_ACTIVITY_LABELS, getAvatarActivity } from '@/lib/avatar-presence';
 import { ConsentDialog } from '@/components/consent-dialog';
 import { ConfirmDialog } from '@/components/confirm-dialog';
 import { RequireAuth } from '@/components/require-auth';
@@ -87,15 +88,20 @@ function ChatInner({ id }: { id: string }) {
   const [text, setText] = useState('');
   const [draftRestored, setDraftRestored] = useState(false);
   const [pending, setPending] = useState<Pending | null>(null);
+  const [composerFocused, setComposerFocused] = useState(false);
   const { setExpression } = useAvatarExpression();
   const avatarTone = useMemo(
     () => conv.isError ? 'neutral' : inferAvatarTone(conv.data?.messages ?? [], pending?.content),
     [conv.data?.messages, conv.isError, pending?.content],
   );
-  const avatarThinking = pending?.status === 'streaming';
+  const avatarActivity = getAvatarActivity({
+    writing: composerFocused,
+    generating: pending?.status === 'streaming',
+    hasReply: Boolean(pending?.reply),
+  });
   useEffect(() => {
-    setExpression({ tone: avatarTone, thinking: avatarThinking });
-  }, [avatarTone, avatarThinking, setExpression]);
+    setExpression({ tone: avatarTone, activity: avatarActivity });
+  }, [avatarTone, avatarActivity, setExpression]);
   const [consentFor, setConsentFor] = useState<{ content: string; cmid?: string } | null>(null);
   const [renameOpen, setRenameOpen] = useState(false);
   const [renameVal, setRenameVal] = useState('');
@@ -226,13 +232,21 @@ function ChatInner({ id }: { id: string }) {
 
   return (
     <div className="mx-auto flex min-h-[calc(100dvh-8rem)] w-full max-w-3xl flex-col px-4 sm:px-6 md:min-h-[100dvh]">
-      <header className="sticky top-0 z-20 -mx-4 flex items-center gap-3 border-b border-border/50 bg-background/70 px-4 py-4 backdrop-blur-xl sm:-mx-6 sm:px-6 md:top-0">
-        <span title="ORBIT’s expression follows conversation cues, not a mood assessment.">
-          <OrbitAvatar size={56} tone={avatarTone} thinking={avatarThinking} decorative={false} />
+      <header className="sticky top-16 z-20 -mx-4 flex items-center gap-2 border-b border-border/50 bg-background/80 px-3 py-3 backdrop-blur-xl sm:-mx-6 sm:gap-4 sm:px-6 md:top-0">
+        <span
+          title="A tentative expression from recent conversation cues, not a mood assessment. Listening uses text only."
+          className="shrink-0"
+          data-testid="avatar-conversation"
+        >
+          <OrbitAvatar size={104} tone={avatarTone} activity={avatarActivity} decorative={false} className="sm:hidden" />
+          <OrbitAvatar size={136} tone={avatarTone} activity={avatarActivity} decorative={false} className="hidden sm:inline-flex" />
         </span>
         <div className="min-w-0 flex-1">
           <h1 className="truncate text-lg font-normal" data-testid="text-conversation-title">{c.title}</h1>
-          <p className="font-mono text-[10px] text-muted-foreground">Started {format(new Date(c.createdAt), 'MMM d, yyyy · HH:mm')}</p>
+          <p className="mt-1 font-mono text-[10px] text-primary/80" role="status" data-testid="status-avatar-activity">
+            {AVATAR_ACTIVITY_LABELS[avatarActivity]}
+          </p>
+          <p className="mt-1 hidden font-mono text-[10px] text-muted-foreground sm:block">Started {format(new Date(c.createdAt), 'MMM d, yyyy · HH:mm')}</p>
         </div>
         <Button
           variant="outline"
@@ -252,9 +266,10 @@ function ChatInner({ id }: { id: string }) {
             )
           }
           data-testid="button-summarize"
+          aria-label={summarize.isPending ? 'Summarizing conversation' : 'Summarize conversation'}
         >
-          <FileText className="mr-1.5 h-3.5 w-3.5" aria-hidden />
-          {summarize.isPending ? 'Summarizing…' : 'Summarize'}
+          <FileText className="h-3.5 w-3.5 sm:mr-1.5" aria-hidden />
+          <span className="hidden sm:inline">{summarize.isPending ? 'Summarizing…' : 'Summarize'}</span>
         </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -283,7 +298,7 @@ function ChatInner({ id }: { id: string }) {
       <div role="log" aria-live="polite" aria-label="Messages" className="flex-1 space-y-5 py-6">
         {messages.length === 0 && !pending && (
           <div className="flex flex-col items-center py-16 text-center">
-            <OrbitAvatar size={64} className="anim-float" />
+            <OrbitAvatar size={104} tone={avatarTone} activity={avatarActivity} />
             <p className="mt-4 text-muted-foreground">Whenever you’re ready. There’s no wrong place to start.</p>
           </div>
         )}
@@ -332,8 +347,10 @@ function ChatInner({ id }: { id: string }) {
             rows={1}
             value={text}
             maxLength={8000}
+            onFocus={() => setComposerFocused(true)}
+            onBlur={() => setComposerFocused(false)}
             onChange={(e) => onText(e.target.value)}
-            onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); if (!streaming) send(text.trim()); } }}
+            onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) { e.preventDefault(); if (!streaming) send(text.trim()); } }}
             placeholder={online ? 'Write to ORBIT…' : 'Offline. Your draft will wait here.'}
             className="max-h-40 min-h-[48px] flex-1 resize-none bg-transparent px-4 py-3 outline-none placeholder:text-muted-foreground/70"
             data-testid="input-chat-message"

@@ -1,73 +1,94 @@
 .orbit-avatar {
-  --oa-gradient-light: #d4e9ff;
-  --oa-gradient-mid: #86b8f6;
-  --oa-gradient-deep: #7560d4;
-  --oa-orbit: #9fc6ff;
-  --oa-moon: #c8b8ff;
-  --oa-ink: #28304f;
-  --oa-blush: #d995b7;
+  --oa-gradient-light: #d8e9fb;
+  --oa-gradient-mid: #8eb8e5;
+  --oa-gradient-deep: #647fb1;
+  --oa-orbit: #9bbce9;
+  --oa-moon: #c8d9f0;
+  --oa-ink: #283b59;
+  --oa-blush: #d29aad;
   vertical-align: middle;
   transition: transform 220ms ease;
 }
 
+/* Each conversational tone has its own quiet, recognizable color signature. */
 .orbit-avatar[data-tone='joyful'] {
-  --oa-gradient-light: #fff1d9;
-  --oa-gradient-mid: #efc18b;
-  --oa-gradient-deep: #ca8d91;
-  --oa-orbit: #e3b998;
-  --oa-moon: #f3d59a;
-  --oa-ink: #594456;
-  --oa-blush: #d79b9a;
+  --oa-gradient-light: #fff0c9;
+  --oa-gradient-mid: #e9bd70;
+  --oa-gradient-deep: #c58b72;
+  --oa-orbit: #dfba7f;
+  --oa-moon: #f1d59a;
+  --oa-ink: #57444a;
+  --oa-blush: #d8918c;
 }
 
 .orbit-avatar[data-tone='playful'] {
-  --oa-gradient-light: #def4ec;
-  --oa-gradient-mid: #8dcdbd;
-  --oa-gradient-deep: #668fb0;
-  --oa-orbit: #a5d5ca;
-  --oa-moon: #c7e7bc;
-  --oa-ink: #294b5a;
-  --oa-blush: #d69ab4;
-}
-
-.orbit-avatar[data-tone='supportive'] {
-  --oa-gradient-light: #f0e8f5;
-  --oa-gradient-mid: #c0acd6;
-  --oa-gradient-deep: #8886b5;
-  --oa-orbit: #c0b1d9;
-  --oa-moon: #ddd0e8;
-  --oa-ink: #403c60;
-  --oa-blush: #d3a9c2;
+  --oa-gradient-light: #d7f7f1;
+  --oa-gradient-mid: #69c9c3;
+  --oa-gradient-deep: #478ea8;
+  --oa-orbit: #87d1cc;
+  --oa-moon: #b5e9df;
+  --oa-ink: #234c59;
+  --oa-blush: #d58fb0;
 }
 
 .orbit-avatar[data-tone='calm'] {
-  --oa-gradient-light: #e3f2eb;
-  --oa-gradient-mid: #9ac9bd;
-  --oa-gradient-deep: #7899af;
-  --oa-orbit: #acd1c6;
-  --oa-moon: #d0e4c8;
-  --oa-ink: #31515a;
-  --oa-blush: #c8a9bd;
-}
-
-.orbit-avatar[data-tone='tired'] {
-  --oa-gradient-light: #e9edf5;
-  --oa-gradient-mid: #b4bfd6;
-  --oa-gradient-deep: #8587ac;
-  --oa-orbit: #b9c5d9;
-  --oa-moon: #d9d5e7;
-  --oa-ink: #41445f;
-  --oa-blush: #c5a7bd;
+  --oa-gradient-light: #e4f1ff;
+  --oa-gradient-mid: #9fc8ef;
+  --oa-gradient-deep: #6f91c4;
+  --oa-orbit: #a9cbef;
+  --oa-moon: #d3e3f7;
+  --oa-ink: #2d4766;
+  --oa-blush: #cba7c0;
 }
 
 .orbit-avatar[data-tone='curious'] {
-  --oa-gradient-light: #f5f0d7;
-  --oa-gradient-mid: #c5cb91;
-  --oa-gradient-deep: #819c96;
-  --oa-orbit: #cbd0a4;
-  --oa-moon: #e7deb0;
-  --oa-ink: #3d5149;
-  --oa-blush: #d0a8b1;
+  --oa-gradient-light: #eee5ff;
+  --oa-gradient-mid: #b6a1e5;
+  --oa-gradient-deep: #786eae;
+  --oa-orbit: #b9a9e4;
+  --oa-moon: #ddd1f3;
+  --oa-ink: #443a62;
+  --oa-blush: #d39ab9;
+}
+
+.orbit-avatar[data-tone='supportive'] {
+  --oa-gradient-light: #f2e8fb;
+  --oa-gradient-mid: #c4addd;
+  --oa-gradient-deep: #9184bb;
+  --oa-orbit: #c5b4dd;
+  --oa-moon: #e1d4ef;
+  --oa-ink: #463d60;
+  --oa-blush: #d2a6c2;
+}
+
+.orbit-avatar[data-tone='concerned'] {
+  --oa-gradient-light: #f7edda;
+  --oa-gradient-mid: #d5b887;
+  --oa-gradient-deep: #a58d78;
+  --oa-orbit: #cdbb99;
+  --oa-moon: #e5d8b9;
+  --oa-ink: #51483f;
+  --oa-blush: #cda5a9;
+}
+
+.orbit-avatar[data-tone='focused'] {
+  --oa-gradient-light: #dceafa;
+  --oa-gradient-mid: #7799cc;
+  --oa-gradient-deep: #4c5f91;
+  --oa-orbit: #8ea9d1;
+  --oa-moon: #c4d3eb;
+  --oa-ink: #283753;
+  --oa-blush: #c49fb4;
+}
+
+.orbit-avatar[data-tone='tired'] {
+  --oa-gradient-light: #e8edf5;
+  --oa-gradient-mid: #aebbd0;
+  --oa-gradient-deep: #77849f;
+  --oa-orbit: #aebdd2;
+  --oa-moon: #d3dbea;
+  --oa-ink: #3c465d;
+  --oa-blush: #c2a4bc;
 }
 
 .oa-svg {
@@ -81,31 +102,34 @@
 .oa-planet,
 .oa-orbit ellipse,
 .oa-orbit circle {
-  transition: fill 650ms ease, stop-color 650ms ease, stroke 650ms ease;
+  transition: fill 720ms ease, stop-color 720ms ease, stroke 720ms ease;
 }
 
 .oa-gradient-light { stop-color: var(--oa-gradient-light); }
 .oa-gradient-mid { stop-color: var(--oa-gradient-mid); }
 .oa-gradient-deep { stop-color: var(--oa-gradient-deep); }
 
+.oa-face {
+  transform-origin: 32px 32px;
+  transition: transform 420ms cubic-bezier(.2,.7,.25,1);
+}
+
 .oa-brows {
-  opacity: .15;
+  opacity: .2;
   transform-origin: 32px 27px;
-  transition: opacity 240ms ease, transform 240ms ease;
+  transition: opacity 280ms ease, transform 280ms ease;
 }
 
 .oa-eye-left,
 .oa-eye-right {
   transform-box: fill-box;
   transform-origin: center;
+  transition: transform 320ms ease, opacity 240ms ease;
 }
 
 .oa-smile-eyes,
 .oa-wink,
-.oa-lids {
-  display: none;
-}
-
+.oa-lids,
 .oa-mouth {
   display: none;
 }
@@ -117,47 +141,48 @@
 .orbit-avatar[data-tone='calm'] .oa-mouth-calm,
 .orbit-avatar[data-tone='tired'] .oa-mouth-tired,
 .orbit-avatar[data-tone='curious'] .oa-mouth-curious,
-.orbit-avatar[data-thinking='true'] .oa-mouth-thinking {
+.orbit-avatar[data-tone='concerned'] .oa-mouth-concerned,
+.orbit-avatar[data-tone='focused'] .oa-mouth-focused {
   display: block;
 }
 
-.orbit-avatar[data-tone='joyful'] .oa-smile-eyes {
+.orbit-avatar[data-expression='amused'][data-tone='joyful'] .oa-smile-eyes {
   display: block;
 }
 
-.orbit-avatar[data-tone='joyful'] .oa-round-eyes {
+.orbit-avatar[data-expression='amused'][data-tone='joyful'] .oa-round-eyes {
   opacity: 0;
 }
 
 .orbit-avatar[data-tone='joyful'] .oa-brows {
-  opacity: .5;
+  opacity: .48;
   transform: translateY(-.45px);
 }
 
 .orbit-avatar[data-tone='playful'] .oa-brows,
 .orbit-avatar[data-tone='curious'] .oa-brows {
-  opacity: .78;
-  transform: translateY(-1px);
+  opacity: .72;
+  transform: translateY(-.7px);
 }
 
 .orbit-avatar[data-tone='playful'] .oa-eye-left {
-  transform: translateY(-.3px);
+  transform: translateY(-.3px) scaleY(.8);
 }
 
-.orbit-avatar[data-tone='playful'] .oa-wink {
+.orbit-avatar[data-tone='playful'] .oa-eye-right {
+  transform: scaleY(.8);
+}
+
+.orbit-avatar[data-expression='amused'][data-tone='playful'] .oa-wink {
   display: block;
   opacity: 0;
   transform-box: fill-box;
   transform-origin: center;
 }
 
-.orbit-avatar[data-tone='playful'] .oa-eye-right {
-  opacity: 1;
-}
-
 .orbit-avatar[data-tone='supportive'] .oa-brows {
-  opacity: .62;
-  transform: translateY(-.45px);
+  opacity: .48;
+  transform: translateY(-.25px);
 }
 
 .orbit-avatar[data-tone='supportive'] .oa-mouth-supportive,
@@ -166,104 +191,162 @@
 }
 
 .orbit-avatar[data-tone='calm'] .oa-brows {
-  opacity: .36;
+  opacity: .3;
 }
 
 .orbit-avatar[data-tone='tired'] .oa-eye-left,
 .orbit-avatar[data-tone='tired'] .oa-eye-right {
-  transform: scaleY(.58);
+  transform: scaleY(.68);
 }
 
 .orbit-avatar[data-tone='tired'] .oa-lids {
   display: block;
-  opacity: .6;
+  opacity: .52;
 }
 
 .orbit-avatar[data-tone='tired'] .oa-brows {
-  opacity: .34;
-  transform: translateY(.7px);
+  opacity: .3;
+  transform: translateY(.55px);
 }
 
-.orbit-avatar[data-tone='curious'] .oa-eye-left {
-  transform: translateY(-.35px) scale(1.04);
-}
-
+.orbit-avatar[data-tone='curious'] .oa-eye-left,
 .orbit-avatar[data-tone='curious'] .oa-eye-right {
-  transform: translateY(-.35px) scale(1.04);
+  transform: translateY(-.35px) scale(1.12);
 }
 
 .orbit-avatar[data-tone='curious'] .oa-mouth-curious {
   stroke-width: 1.65;
 }
 
-.orbit-avatar[data-thinking='true'] .oa-brows {
+.orbit-avatar[data-tone='concerned'] .oa-brows {
+  opacity: .5;
+  transform: translateY(.35px);
+}
+
+.orbit-avatar[data-tone='focused'] .oa-brows {
+  opacity: .55;
+  transform: translateY(.3px);
+}
+
+.orbit-avatar[data-tone='focused'] .oa-eye-left,
+.orbit-avatar[data-tone='focused'] .oa-eye-right {
+  transform: scaleY(.88);
+}
+
+.orbit-avatar[data-activity='listening'] .oa-face {
+  transform: rotate(-1.35deg) translateY(-.2px);
+}
+
+.orbit-avatar[data-expression='attentive'] .oa-brows {
+  opacity: .55;
+  transform: translateY(-.65px);
+}
+
+.orbit-avatar[data-expression='thoughtful'] .oa-face {
+  transform: rotate(1deg);
+}
+
+.orbit-avatar[data-expression='thoughtful'] .oa-round-eyes {
+  animation: none;
+  transform: translate(.4px, -.35px);
+}
+
+.orbit-avatar[data-expression='thoughtful'] .oa-brows {
   opacity: .56;
   transform: translateY(-.45px);
 }
 
-.orbit-avatar[data-thinking='true'] .oa-mouth:not(.oa-mouth-thinking) {
+.orbit-avatar[data-expression='animated'] .oa-mouth:not(.oa-mouth-speaking) {
   display: none;
 }
 
+.orbit-avatar[data-expression='animated'] .oa-mouth-speaking {
+  display: block;
+}
+
+.orbit-avatar[data-expression='animated'] .oa-brows {
+  opacity: .42;
+  transform: translateY(-.3px);
+}
+
+.orbit-avatar[data-expression='empathetic'] .oa-brows {
+  opacity: .4;
+}
+
+.orbit-avatar[data-expression='concerned'] .oa-brows {
+  opacity: .56;
+}
+
 .oa-blush {
-  opacity: .32;
-  transition: opacity 300ms ease, fill 650ms ease;
+  opacity: .25;
+  transition: opacity 300ms ease, fill 720ms ease;
 }
 
-.orbit-avatar[data-tone='joyful'] .oa-blush,
-.orbit-avatar[data-tone='playful'] .oa-blush {
-  opacity: .48;
+.orbit-avatar[data-expression='amused'] .oa-blush {
+  opacity: .42;
 }
 
-.orbit-avatar[data-tone='supportive'] .oa-blush,
-.orbit-avatar[data-tone='calm'] .oa-blush {
-  opacity: .28;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .orbit-avatar:hover {
-    transform: translateY(-1px) scale(1.035);
-  }
+.orbit-avatar[data-expression='empathetic'] .oa-blush,
+.orbit-avatar[data-expression='concerned'] .oa-blush {
+  opacity: .2;
 }
 
 .oa-motion .oa-orbit {
   transform-origin: 32px 32px;
-  animation: oa-orbit-drift 18s linear infinite;
+  animation: oa-orbit-drift 30s linear infinite;
 }
 
-.oa-motion[data-thinking='true'] .oa-orbit {
-  animation-duration: 27s;
+.oa-motion[data-activity='thinking'] .oa-orbit {
+  animation-duration: 42s;
+}
+
+.oa-motion[data-activity='thinking'] .oa-orbit ellipse {
+  animation: oa-processing 3.2s linear infinite;
 }
 
 .oa-motion .oa-eye-left,
 .oa-motion .oa-eye-right {
-  animation: oa-blink 6.8s ease-in-out infinite;
+  animation: oa-blink 7.6s ease-in-out infinite;
 }
 
 .oa-motion .oa-eye-right {
-  animation-delay: .045s;
+  animation-delay: .06s;
 }
 
-.oa-motion[data-tone='playful'] .oa-wink {
-  animation: oa-wink 7.4s ease-in-out infinite;
+.oa-motion[data-expression='amused'][data-tone='playful'] .oa-wink {
+  animation: oa-wink 9.2s ease-in-out infinite;
 }
 
-.oa-motion[data-tone='playful'] .oa-eye-right {
-  animation: oa-blink 6.8s ease-in-out infinite, oa-wink-eye 7.4s ease-in-out infinite;
+.oa-motion[data-expression='amused'][data-tone='playful'] .oa-eye-right {
+  animation: oa-blink 7.6s ease-in-out infinite, oa-wink-eye 9.2s ease-in-out infinite;
 }
 
 .oa-motion .oa-round-eyes {
   transform-origin: center;
-  animation: oa-gaze 9s ease-in-out infinite;
+  animation: oa-gaze 10s ease-in-out infinite;
+}
+
+.oa-motion[data-activity='thinking'] .oa-round-eyes {
+  animation: none;
+  transform: translate(.4px, -.35px);
 }
 
 .oa-motion .oa-brows {
-  animation: oa-brow-drift 7s ease-in-out infinite;
+  animation: oa-brow-drift 8.5s ease-in-out infinite;
 }
 
 .oa-motion .oa-mouths {
   transform-origin: 32px 37px;
-  animation: oa-mouth-drift 8s ease-in-out infinite;
+  animation: oa-mouth-drift 9s ease-in-out infinite;
+}
+
+.oa-motion[data-activity='speaking'] .oa-mouths {
+  animation: oa-speak 1.8s ease-in-out infinite;
+}
+
+@keyframes oa-processing {
+  from { stroke-dashoffset: 0; }
+  to { stroke-dashoffset: -28; }
 }
 
 @keyframes oa-orbit-drift {
@@ -287,41 +370,61 @@
 
 @keyframes oa-gaze {
   0%, 24%, 78%, 100% { transform: translateX(0); }
-  31%, 38% { transform: translateX(.45px); }
-  85%, 91% { transform: translateX(-.35px); }
+  31%, 38% { transform: translateX(.42px); }
+  85%, 91% { transform: translateX(-.32px); }
 }
 
 @keyframes oa-brow-drift {
   0%, 42%, 53%, 100% { translate: 0 0; }
-  46%, 49% { translate: 0 -.35px; }
+  46%, 49% { translate: 0 -.3px; }
 }
 
 @keyframes oa-mouth-drift {
   0%, 40%, 55%, 100% { translate: 0 0; }
-  46%, 50% { translate: 0 -.22px; }
+  46%, 50% { translate: 0 -.18px; }
+}
+
+@keyframes oa-speak {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(1.14); }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .orbit-avatar:hover {
+    transform: translateY(-1px) scale(1.025);
+  }
+}
+
+.oa-hero {
+  width: 176px !important;
+  height: 176px !important;
+}
+
+.oa-hero .oa-svg {
+  width: 176px;
+  height: 176px;
+}
+
+@media (max-width: 520px) {
+  .oa-hero {
+    width: 148px !important;
+    height: 148px !important;
+  }
+
+  .oa-hero .oa-svg {
+    width: 148px;
+    height: 148px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .orbit-avatar,
-  .oa-gradient-light,
-  .oa-gradient-mid,
-  .oa-gradient-deep,
-  .oa-planet,
-  .oa-orbit ellipse,
-  .oa-orbit circle,
-  .oa-brows,
-  .oa-blush {
-    transition: none !important;
-  }
-
-  .oa-motion .oa-orbit,
-  .oa-motion .oa-eye-left,
-  .oa-motion .oa-eye-right,
-  .oa-motion .oa-wink,
-  .oa-motion .oa-round-eyes,
-  .oa-motion .oa-brows,
-  .oa-motion .oa-mouths {
+  .orbit-avatar *,
+  .orbit-avatar.anim-float,
+  .oa-hero.anim-float {
     animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
   }
 
   .orbit-avatar:hover {

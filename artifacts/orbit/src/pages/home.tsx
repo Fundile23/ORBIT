@@ -108,7 +108,7 @@ export default function HomePage() {
       <section className="flex flex-col items-center text-center">
         <div className="rise relative mb-8">
           <div className="absolute inset-0 -z-10 scale-[2.2] rounded-full bg-[radial-gradient(circle,hsl(210_92%_74%/.22),transparent_65%)]" aria-hidden />
-          <OrbitAvatar size={104} className="anim-float" decorative={false} />
+          <OrbitAvatar size={176} className="anim-float oa-hero" decorative={false} />
         </div>
         <p className="rise font-mono text-[11px] uppercase tracking-[0.3em] text-primary/80" style={{ animationDelay: '80ms' }}>
           your private space
@@ -134,7 +134,7 @@ export default function HomePage() {
               value={text}
               maxLength={8000}
               onChange={(e) => update(e.target.value)}
-              onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); begin(); } }}
+              onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) { e.preventDefault(); begin(); } }}
               placeholder="What’s on your mind?"
               className="max-h-48 min-h-[56px] flex-1 resize-none bg-transparent px-4 py-3 text-base outline-none placeholder:text-muted-foreground/70"
               data-testid="input-home-message"

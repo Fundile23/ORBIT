@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { inferAvatarTone, type AvatarTone } from './avatar-tone';
+import { estimateConversationTone, inferAvatarTone, type AvatarTone } from './avatar-tone';
 
 const examples: [string, AvatarTone][] = [
   ['I am so excited, we did it!', 'joyful'],
@@ -16,7 +16,10 @@ const examples: [string, AvatarTone][] = [
   ['I am not sad, I am excited!', 'joyful'],
   ['I am not tired. Tell me about Saturn.', 'curious'],
   ['Haha, jokes aside, I feel alone.', 'supportive'],
-  ['I want to kill myself, lol.', 'supportive'],
+  ['I want to kill myself, lol.', 'concerned'],
+  ['Let’s focus on the experiment step by step.', 'focused'],
+  ['I am curious why sad music feels good.', 'curious'],
+  ['Maybe I am sad, maybe I am excited.', 'neutral'],
 ];
 for (const [content, expected] of examples) {
   test(`decorative cue: ${content}`, () => {
@@ -43,4 +46,33 @@ test('newly sent text takes priority over earlier banter', () => {
 });
 test('no conversation defaults to the original neutral expression', () => {
   assert.equal(inferAvatarTone([]), 'neutral');
+});
+test('uncertainty alternatives sum to one and never establish a certain mood', () => {
+  const estimate = estimateConversationTone([{ role: 'user', content: 'I feel excited.' }]);
+  assert.ok(Math.abs(Object.values(estimate.probabilities).reduce((sum, n) => sum + n, 0) - 1) < 1e-10);
+  assert.ok(estimate.confidence > 0 && estimate.confidence < 1);
+  assert.ok(estimate.probabilities.neutral > 0);
+});
+test('repeated context strengthens a cue more than one message does', () => {
+  const single = estimateConversationTone([{ role: 'user', content: 'I feel lonely.' }]);
+  const repeated = estimateConversationTone([
+    { role: 'user', content: 'I miss my family.' },
+    { role: 'assistant', content: 'What part of home is with you today?' },
+    { role: 'user', content: 'I feel lonely.' },
+  ]);
+  assert.ok(repeated.confidence > single.confidence);
+  assert.equal(repeated.evidenceTurns, 2);
+});
+test('a refreshed pending message cannot manufacture extra evidence', () => {
+  const history = [{ role: 'user', content: 'I feel excited.' }];
+  assert.deepEqual(estimateConversationTone(history, history[0]!.content), estimateConversationTone(history));
+});
+test('a new serious cue stops amusement after several playful turns', () => {
+  assert.equal(inferAvatarTone([
+    { role: 'user', content: 'Haha, roast my cooking.' },
+    { role: 'user', content: 'Tell me another joke.' },
+  ], 'Jokes aside, I cried and feel alone.'), 'supportive');
+});
+test('a standalone emoji is ambiguous and does not establish a playful mood', () => {
+  assert.equal(inferAvatarTone([{ role: 'user', content: '😂' }]), 'neutral');
 });
